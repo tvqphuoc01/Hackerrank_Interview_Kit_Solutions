@@ -1,0 +1,70 @@
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.replace(/\s*$/, '')
+        .split('\n')
+        .map(str => str.replace(/\s*$/, ''));
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+function swap(arr, i, j) {
+    let temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+function indexOf(arr, e) {
+    for(let i = 0; i < arr.length; i++) {
+        if(arr[i] === e) {
+            return i;
+        }
+    }
+    return -1
+}
+
+// Complete the minimumSwaps function below.
+function minimumSwaps(arr) {
+    let count = 0;
+    let temp = [...arr];
+    temp.sort((a,b)=>a-b);
+    for (let i =0; i < arr.length; i++) {
+        if (temp[i] !== arr[i]) {
+            count++;
+            swap(arr, i, indexOf(arr, temp[i]))
+        }
+    }
+    
+    // tong xich ma vong cua tu 1 -> k-1
+    return count;
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+
+    const n = parseInt(readLine(), 10);
+
+    const arr = readLine().split(' ').map(arrTemp => parseInt(arrTemp, 10));
+
+    const res = minimumSwaps(arr);
+
+    ws.write(res + '\n');
+
+    ws.end();
+}
